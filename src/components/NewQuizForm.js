@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import ROUTES from "../app/routes";
 import { selectTopics } from "../features/topics/topicsSlice"
@@ -7,40 +7,61 @@ import { newQuizThunk, selectQuizzes } from "../features/quizzes/quizzesSlice"
 import { addCard } from "../features/cards/cardsSlice"
 
 import { useSelector, useDispatch } from 'react-redux'
+import Error from "./Error";
 
 
 export default function NewQuizForm() {
   const [name, setName] = useState("");
   const [cards, setCards] = useState([]);
-  const [topicId, setTopicId] = useState("");
+  let { topId } = useParams();
+  const [topicId, setTopicId] = useState(topId);
+  const [error, setError] = useState('');
   const history = useHistory();
+  
   const topics = useSelector(selectTopics);
   const quizzes = useSelector(selectQuizzes);
   const dispatch = useDispatch()
-  const [dupeQuiz, setDupeQuiz] = useState(false);
-
+  // let topId = topicId
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.length === 0) {
       return;
     }
+    console.log('topicId: ', JSON.stringify(topicId))
+    if (topicId.length === 0) {
+      if (topId) {
+        console.log('topicId.length === 0')
+        return;
+      // } else {
+      //   topId = paramTopId;
+      }
+    }
+   
     
     const cardIds = [];
     // create the new cards here and add each card's id to cardIds
     if (Object.values(quizzes).find((quiz) =>quiz.name === name)){
-      setDupeQuiz(true);
+      setError("Name in Use; Choose Another to Add Quiz");
       return;
     }
-    setDupeQuiz(false);
+    if (cards.length === 0){
+      setError("Please add at least ONE card!");
+      return;
+    }
+    let cardValues = []
+    
     cards.map(card => {
+      
       const cardId =  uuidv4();
       let cardObj = {
         id: cardId, 
         front: card.front, 
         back:  card.back
       };
+      
+      
       cardIds.push(cardId);
-      // console.log('map - cardObj: ', JSON.stringify(cardObj))
+      
       dispatch(addCard(cardObj));
     })
     
@@ -68,9 +89,18 @@ export default function NewQuizForm() {
     e.preventDefault();
     setCards(cards.filter((card, i) => index !== i));
   };
-
+  
   const updateCardState = (index, side, value) => {
     const newCards = cards.slice();
+    
+      
+     if (newCards.find(card => card.front === value))
+      {
+        setError(`Name '${value}' in use! Rename card.`);
+        return;
+      }
+    const topicOption = '<option value="">Topic</option>'
+     
     newCards[index][side] = value;
     setCards(newCards);
   };
@@ -90,12 +120,26 @@ export default function NewQuizForm() {
           onChange={(e) => setTopicId(e.currentTarget.value)}
           placeholder="Topic"
         >
-          <option value="">Topic</option>
-          {Object.values(topics).map((topic) => (
+          {topId ? "" : <option value="">Topic</option>}
+          {topId ? <option key={topId} value={topId}>{topics[topId].name}</option> : 
+            
+            Object.values(topics).map
+             (
+              (topic) => 
+                ( 
+                 <option key={topic.id} value={topic.id}>
+                   {topic.name}
+                 </option>
+                )
+            )
+              
+          }
+          
+             {/* {Object.values(topics).map((topic) => ( 
             <option key={topic.id} value={topic.id}>
               {topic.name}
             </option>
-          ))}
+          ))} */}
         </select>
         {cards.map((card, index) => (
           <div key={index} className="card-front-back">
@@ -127,9 +171,10 @@ export default function NewQuizForm() {
         ))}
         <div className="actions-container">
           <button onClick={addCardInputs}>Add a Card</button>
-          <button >{dupeQuiz ? "Name in Use; Choose Another to Add Quiz" : "Add Quiz"}</button>
+          <button >Add Quiz</button>
          
         </div>
+        <Error error={error}/>
       </form>
     </section>
   );

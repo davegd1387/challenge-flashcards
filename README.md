@@ -8,12 +8,13 @@ The app's state is totally normalized, with slices for topics, quizzes, and card
 
 # Routes
 
-- `/new-topic` – form to create a new topic
+- `/topics/new` – form to create a new topic
 - `/topics` – index of all topics
 - `/topics/:topicId` – page for an individual topic
-- `/new-quiz` – form to create a new quiz
+- `/quizzes/new` – form to create a new quiz
 - `/quizzes` – index of all quizzes
 - `/quizzes/:quizId` – page for an individual quiz
+- `/quizzes/new/:topId` – page for new quiz from specific topic.
 
 # To Test
 
@@ -21,6 +22,13 @@ The app's state is totally normalized, with slices for topics, quizzes, and card
 2. Create quizzes
 3. Visit the page for an individual quiz and flip the cards over
 
-# Questions
+# Enhancements
+- Added Header component.
+- Added Error component.
+- Added "New Topic" as header link.
+- Made header links conditional on existing topics/quizzes.
+- Added checks for duplicate topic and quiz names, cards within a given quiz.
+- Require icon to be entered for topic
+- Require at least 1 card per quiz.
+- Pass topic id as param when clicking on "add quiz" from topic page.
 
-Is this appropriately scoped? Does it have too many features? Too few?

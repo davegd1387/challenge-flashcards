@@ -18,7 +18,7 @@ export default function Topics() {
              <img src={topic.icon} alt="" />
              <div className="text-content">
                <h2>{topic.name}</h2>
-               <p>{topic.quizIds.length}{ topic.quizIds.length === 1 ? " Quiz" : " Quizzes"}</p>
+               <p>{topic.quizIds.length}{ topic.quizIds.length === 1 ? " Quiz" : " Quizzes"}</p> {/* DD 07/22 */}
              </div>
            </div>
          </Link>
