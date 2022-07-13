@@ -26,8 +26,10 @@ export default function Topic() {
           </li>
         ))}
       </ul>
-      <Link to="/quizzes/new" className="button center">
-        New Quiz
+      
+      <Link to={ROUTES.newQuizforTopicRoute(topicId)} className="button center">
+      {/* <Link to="/quizzes/new" className="button center"> */}
+        New Quiz?
       </Link>
     </section>
   );

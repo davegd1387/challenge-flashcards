@@ -6,13 +6,14 @@ import ROUTES from "../app/routes";
 import { ALL_ICONS } from "../data/icons";
 import { addTopic } from "../features/topics/topicsSlice";
 import { selectTopics } from "../features/topics/topicsSlice"
+import Error from "./Error";
 
 
 export default function NewTopicForm() {
   const topics = useSelector(selectTopics); 
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
-  const [dupeTopic, setDupeTopic] = useState(false);
+  const [error, setError] = useState('');
   const history = useHistory();
   const dispatch = useDispatch()
 
@@ -22,12 +23,17 @@ export default function NewTopicForm() {
       return;
     }
 
-    // dispatch your add topic action here
-    if (Object.values(topics).find((topic) => topic.name === name)){
-      setDupeTopic(true);
+    if (icon.length === 0) {
       return;
     }
-    setDupeTopic(false)
+
+
+    // dispatch your add topic action here
+    if (Object.values(topics).find((topic) => topic.name === name)){
+      setError("Name in Use; Choose Another to Add Topic"); 
+      return;
+    }
+    
     dispatch(addTopic({name, id: uuidv4(), icon}))
     history.push(ROUTES.topicsRoute());
   };
@@ -59,7 +65,8 @@ export default function NewTopicForm() {
             ))}
           </select>
         </div>
-        <button className="center">{dupeTopic ? "Name in Use; Choose Another to Add Topic" : "Add Topic"}</button>
+        <button className="center">Add Topic</button>
+        <Error error={error}/>
       </form>
     </section>
   );

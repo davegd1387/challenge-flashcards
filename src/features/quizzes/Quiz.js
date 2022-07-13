@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux'
 
 // export default function Topic() {
   export default function Quiz() {
-  const quizzes = useSelector(selectQuizzes); let { quizId } = useParams();
+  const quizzes = useSelector(selectQuizzes); 
+  let { quizId } = useParams();
+  console.log('quizId: ', quizId)
   const quiz = quizzes[quizId];
 
   return (
@@ -18,7 +20,7 @@ import { useSelector } from 'react-redux'
         ))}
       </ul>
       <Link to={ROUTES.newQuizRoute()} className="button center">
-        New Quiz
+        New Quiz !!!
       </Link>
     </section>
   );

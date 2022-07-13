@@ -8,7 +8,6 @@ import  cardsReducer from '../features/cards/cardsSlice'
     topics: topicsReducer,
     quizzes: quizzesReducer,
     cards: cardsReducer,
-
   },
 });
 
